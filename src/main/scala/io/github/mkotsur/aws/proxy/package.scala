@@ -1,6 +1,6 @@
 package io.github.mkotsur.aws
 
-import io.circe.{Decoder}
+import io.circe.Decoder
 
 package object proxy {
   case class RequestContextAuthorizer(

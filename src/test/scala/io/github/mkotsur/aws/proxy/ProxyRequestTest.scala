@@ -32,8 +32,9 @@ class ProxyRequestTest extends AnyFunSuite with should.Matchers with MockitoSuga
   }
 
   /**
-    * @see https://github.com/mkotsur/aws-lambda-scala/issues/24
-    */
+   * @see
+   *   https://github.com/mkotsur/aws-lambda-scala/issues/24
+   */
   test("should deserialize JSON with Cognito custom claims into a case class") {
 
     import io.circe.generic.auto._

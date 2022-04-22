@@ -18,8 +18,7 @@ private[aws] trait AllCodec {
     CanDecode.instance[T](
       implicitly[ClassTag[T]] match {
         case ct if ct.runtimeClass == classOf[String] =>
-          is =>
-            Right(Source.fromInputStream(is).mkString.asInstanceOf[T])
+          is => Right(Source.fromInputStream(is).mkString.asInstanceOf[T])
         case _ =>
           is =>
             val string = Source.fromInputStream(is).mkString

@@ -28,7 +28,8 @@ object ProxyLambdaTest {
   class ProxyRawHandlerWithError extends Lambda.ApiProxy[String, RequestContext, String] {
 
     override protected def handle(
-        i: ApiProxyRequest[String, RequestContext]): Either[Throwable, ApiProxyResponse[String]] =
+        i: ApiProxyRequest[String, RequestContext]
+    ): Either[Throwable, ApiProxyResponse[String]] =
       Left(
         new Error("Could not handle this request for some obscure reasons")
       )
@@ -36,9 +37,13 @@ object ProxyLambdaTest {
 
   class ProxyCaseClassHandler extends Lambda.ApiProxy[Ping, RequestContext, Pong] {
     override protected def handle(input: ApiProxyRequest[Ping, RequestContext]) = Right(
-      ApiProxyResponse(200, None, input.body.map { ping =>
-        Pong(ping.inputMsg.length.toString)
-      })
+      ApiProxyResponse(
+        200,
+        None,
+        input.body.map { ping =>
+          Pong(ping.inputMsg.length.toString)
+        }
+      )
     )
   }
 
@@ -99,7 +104,8 @@ class ProxyLambdaTest extends AnyFunSuite with should.Matchers with MockitoSugar
         500,
         Some(Map("Content-Type" -> s"text/plain; charset=UTF-8")),
         Some("Could not handle this request for some obscure reasons")
-      ))
+      )
+    )
   }
 
   test("should generate error response in case of error in case class handler") {
@@ -118,7 +124,8 @@ class ProxyLambdaTest extends AnyFunSuite with should.Matchers with MockitoSugar
         500,
         Some(Map("Content-Type" -> s"text/plain; charset=UTF-8")),
         Some("Oh boy, something went wrong...")
-      ))
+      )
+    )
   }
 
   test("should support Future as output") {
@@ -134,7 +141,7 @@ class ProxyLambdaTest extends AnyFunSuite with should.Matchers with MockitoSugar
     import Lambda.{canDecodeProxyRequest, canEncodeFuture, canEncodeProxyResponse}
 
     val function
-      : (ApiProxyRequest[Ping, RequestContext], Context) => Either[Throwable, ApiProxyResponse[Future[Pong]]] =
+        : (ApiProxyRequest[Ping, RequestContext], Context) => Either[Throwable, ApiProxyResponse[Future[Pong]]] =
       (_: ApiProxyRequest[Ping, RequestContext], _) =>
         Right(ApiProxyResponse.success(Some(Future.successful(Pong("4")))))
     Lambda.Proxy.instance(function).handle(is, os, context)
@@ -172,7 +179,8 @@ class ProxyLambdaTest extends AnyFunSuite with should.Matchers with MockitoSugar
           500,
           Some(Map("Content-Type" -> s"text/plain; charset=UTF-8")),
           Some("Oops")
-        ))
+        )
+      )
     }
   }
 
@@ -204,7 +212,8 @@ class ProxyLambdaTest extends AnyFunSuite with should.Matchers with MockitoSugar
         ApiProxyResponse(
           statusCode = 200,
           body = None
-        ))
+        )
+      )
     }
   }
 

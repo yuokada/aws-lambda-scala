@@ -212,7 +212,8 @@ class LambdaTest extends AnyFunSuite with should.Matchers with MockitoSugar with
     val os = new ByteArrayOutputStream()
 
     val handler = Lambda.instance[Ping, Future[Pong]]((_, _) =>
-      Right(Future.failed(new IndexOutOfBoundsException("Something is wrong"))))
+      Right(Future.failed(new IndexOutOfBoundsException("Something is wrong")))
+    )
 
     an[IndexOutOfBoundsException] should be thrownBy handler.handle(is, os, mock[Context])
   }
@@ -229,7 +230,8 @@ class LambdaTest extends AnyFunSuite with should.Matchers with MockitoSugar with
       Right(Future {
         Thread.sleep(1000)
         Pong("Not gonna happen")
-      }))
+      })
+    )
 
     an[TimeoutException] should be thrownBy handler.handle(is, os, context)
   }

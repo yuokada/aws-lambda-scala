@@ -23,9 +23,9 @@ object Lambda extends AllCodec with ProxyRequestCodec {
 
     private type CanEncodeProxyResponse[A] = CanEncode[ApiProxyResponse[A]]
 
-    def instance[I: CanDecode, C: CanDecode, O: CanEncodeProxyResponse](doHandle: Proxy.Handle[I, C, O])(
-        implicit canDecodeFullReq: CanDecode[ApiProxyRequest[I, C]])
-      : Lambda[ApiProxyRequest[I, C], ApiProxyResponse[O]] =
+    def instance[I: CanDecode, C: CanDecode, O: CanEncodeProxyResponse](
+        doHandle: Proxy.Handle[I, C, O]
+    )(implicit canDecodeFullReq: CanDecode[ApiProxyRequest[I, C]]): Lambda[ApiProxyRequest[I, C], ApiProxyResponse[O]] =
       new Lambda.ApiProxy[I, C, O] {
         override protected def handle(i: ApiProxyRequest[I, C], c: Context) = doHandle(i, c)
       }
@@ -50,18 +50,18 @@ object Lambda extends AllCodec with ProxyRequestCodec {
 abstract class Lambda[I: CanDecode, O: CanEncode] extends RequestStreamHandler {
 
   /**
-    * Either of the following two methods should be overridden,
-    * if ths one is overridden, its implementation will be called from `handleRequest`, and `handle(i: I)` will never be used..
-    * if the `handle(i: I)` is overridden, this method will delegate to that one and NotImplementedError will not occur.
-    */
+   * Either of the following two methods should be overridden, if ths one is overridden, its implementation will be
+   * called from `handleRequest`, and `handle(i: I)` will never be used.. if the `handle(i: I)` is overridden, this
+   * method will delegate to that one and NotImplementedError will not occur.
+   */
   protected def handle(i: I, c: Context): Either[Throwable, O] = handle(i)
 
   protected def handle(i: I): HandleResult[O] =
     Left(new NotImplementedError("Please implement the method handle(i: I, c: Context)"))
 
   /**
-    * For backwards compatibility and naming consistency
-    */
+   * For backwards compatibility and naming consistency
+   */
   final def handle(input: InputStream, output: OutputStream, context: Context): Unit =
     handleRequest(input, output, context)
 

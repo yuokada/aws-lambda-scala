@@ -13,9 +13,9 @@ import scala.language.{higherKinds, postfixOps}
 private[aws] trait ProxyRequestCodec extends AllCodec with FutureCodec {
 
   /**
-    * This is a transformer between case classes and their generic representations [shapeless.HList].
-    * Please check Shapeless guide (e.g. https://github.com/underscoreio/shapeless-guide) for more details.
-    */
+   * This is a transformer between case classes and their generic representations [shapeless.HList]. Please check
+   * Shapeless guide (e.g. https://github.com/underscoreio/shapeless-guide) for more details.
+   */
   implicit def canDecodeProxyRequest[T: CanDecode, C: Decoder] =
     CanDecode.instance[ApiProxyRequest[T, C]] { is =>
       {
@@ -30,8 +30,10 @@ private[aws] trait ProxyRequestCodec extends AllCodec with FutureCodec {
           Generic[ApiProxyRequest[T, C]].from((bodyOption :: reqList.reverse.tail).reverse)
         }
 
-        for (decodedRequest$String <- CanDecode[ApiProxyRequest[String, C]].readStream(is);
-             decodedBodyOption     <- extractBody(decodedRequest$String))
+        for (
+          decodedRequest$String <- CanDecode[ApiProxyRequest[String, C]].readStream(is);
+          decodedBodyOption     <- extractBody(decodedRequest$String)
+        )
           yield produceProxyResponse(decodedRequest$String, decodedBodyOption)
       }
     }
