@@ -6,7 +6,7 @@ addSbtPlugin("com.jsuereth" % "sbt-pgp" % "2.1.1")
 
 addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.13")
 
-addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.2")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.6")
 
 // dependencyUpdates: show a list of project dependencies that can be updated
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.5.1")
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.5.3")
